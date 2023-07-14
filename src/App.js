@@ -4,6 +4,8 @@ import { Navbar, Container, Nav } from "react-bootstrap";
 import bg from "./img/bg.png";
 import { useState } from "react";
 import data from "./data/shoes";
+import { Routes, Route, Link } from "react-router-dom";
+import Detail from "./view/detail";
 
 function App() {
   let [shoes] = useState(data);
@@ -21,18 +23,33 @@ function App() {
         </Container>
       </Navbar>
 
-      <div
-        className="main-bg"
-        style={{ backgroundImage: "url(" + bg + ")" }}
-      ></div>
+      <Link to="/">홈</Link>
+      <br />
+      <Link to="/detail">상세페이지</Link>
 
-      <div className="container">
-        <div className="row">
-          {shoes.map(function (item, i) {
-            return <Card key={item.id} i={i + 1} item={item}></Card>;
-          })}
-        </div>
-      </div>
+      <Routes>
+        {/* Route는 페이지라고 생각하면 됨. 페이지 갯수만큼 추가하기 */}
+        <Route
+          path="/"
+          element={
+            <div>
+              <div
+                className="main-bg"
+                style={{ backgroundImage: "url(" + bg + ")" }}
+              ></div>
+
+              <div className="container">
+                <div className="row">
+                  {shoes.map(function (item, i) {
+                    return <Card key={item.id} i={i + 1} item={item}></Card>;
+                  })}
+                </div>
+              </div>
+            </div>
+          }
+        />
+        <Route path="/detail" element={<Detail />} />
+      </Routes>
     </div>
   );
 }
