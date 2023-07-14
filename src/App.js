@@ -5,7 +5,8 @@ import bg from "./img/bg.png";
 import { useState } from "react";
 import data from "./data/shoes";
 import { Routes, Route, Link } from "react-router-dom";
-import Detail from "./view/detail";
+import Card from "./components/Card";
+import Detail from "./pages/detail";
 
 function App() {
   let [shoes] = useState(data);
@@ -50,20 +51,6 @@ function App() {
         />
         <Route path="/detail" element={<Detail />} />
       </Routes>
-    </div>
-  );
-}
-
-function Card(props) {
-  return (
-    <div className="col-md-4">
-      <img
-        src={`https://codingapple1.github.io/shop/shoes${props.i}.jpg`}
-        alt="신발"
-        width="100%"
-      />
-      <h4>{props.item.title}</h4>
-      <p>{props.item.price}</p>
     </div>
   );
 }
