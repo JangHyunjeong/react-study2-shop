@@ -4,12 +4,12 @@ import { Navbar, Container, Nav } from "react-bootstrap";
 import bg from "./img/bg.png";
 import { useState } from "react";
 import data from "./data/shoes";
-import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
+import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
 import Card from "./components/Card";
 import Detail from "./pages/detail";
 
 function App() {
-  let [shoes] = useState(data);
+  let [shoes, setShose] = useState(data);
   // 페이지 이동을 도와주는 함수
   let naviate = useNavigate();
 
@@ -17,7 +17,13 @@ function App() {
     <div className="App">
       <Navbar bg="dark" data-bs-theme="dark">
         <Container>
-          <Navbar.Brand href="#home">Navbar</Navbar.Brand>
+          <Navbar.Brand
+            onClick={() => {
+              naviate("/");
+            }}
+          >
+            Navbar
+          </Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link
               onClick={() => {
@@ -83,27 +89,35 @@ function App() {
                 style={{ backgroundImage: "url(" + bg + ")" }}
               ></div>
 
+              <button
+                type="button"
+                onClick={() => {
+                  shoes.sort((a, b) => {
+                    if (a.title > b.title) return 1;
+                    if (a.title < b.title) return -1;
+                    return 0;
+                  });
+                  setShose([...shoes]);
+                }}
+              >
+                가나다순
+              </button>
+
               <div className="container">
                 <div className="row">
                   {shoes.map(function (item, i) {
-                    return <Card key={item.id} i={i + 1} item={item}></Card>;
+                    return <Card key={item.id} item={item}></Card>;
                   })}
                 </div>
               </div>
             </div>
           }
         />
-        <Route path="/detail" element={<Detail />} />
 
-        {/* Nasted Routes 전,
-         <Route path="/about" element={<About />} />
-        <Route path="/about/member" element={<About />} />
-        <Route path="/about/location" element={<About />} /> */}
+        {/* URL 파라미터
+        /detail/:id  = /detail/아무거나 라는 뜻 */}
+        <Route path="/detail/:id" element={<Detail shoes={shoes} />} />
 
-        {/* Nasted Routes 후, 
-        nasted route 접속시엔 element 2개 보임 (about꺼, member꺼.. )
-        > 어디에 보여줄지 작성해야함 <Outlet /> 이용
-        */}
         <Route path="/about" element={<About />}>
           <Route path="member" element={<div>멤버</div>} />
           <Route path="location" element={<div>로케이션</div>} />
