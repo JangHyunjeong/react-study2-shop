@@ -7,6 +7,14 @@ function Detail(props) {
   let [alertShow, setAlertShow] = useState(true);
   let { id } = useParams();
   let [tabNumber, setTabNumber] = useState(0);
+  let [fade, setFade] = useState("");
+
+  useEffect(() => {
+    setTimeout(() => {
+      setFade("end");
+    }, 10);
+    return setFade("");
+  }, []);
 
   useEffect(() => {
     let timer = setTimeout(() => {
@@ -26,7 +34,7 @@ function Detail(props) {
   }, [prdCount]);
 
   return (
-    <div className="container">
+    <div className={`container start ${fade}`}>
       {/* 2초후 div숨기기 */}
       {alertShow === true ? (
         <div className="alert alert-warning">2초 이내 구매시 할인</div>
