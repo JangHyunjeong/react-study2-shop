@@ -1,8 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Nav } from "react-bootstrap";
 
+// state 사용1. Context import
+import { Context1 } from "../App";
+
 function Detail(props) {
+  // state 사용2. useContext(가져온변수명)
+
+  // let { 재고 } = useContext(Context1);
+
   let [count, setCount] = useState(0);
   let [alertShow, setAlertShow] = useState(true);
   let { id } = useParams();
@@ -113,6 +120,8 @@ function Detail(props) {
 }
 
 function TabContent(props) {
+  let { 재고 } = useContext(Context1);
+
   // 탭 tabNumber가 변할때 end 부착
   let [fade, setFade] = useState("");
 
@@ -132,7 +141,11 @@ function TabContent(props) {
 
   return (
     <div className={`start ${fade}`}>
-      {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][props.tabNumber]}
+      {
+        [<div>내용0 {재고}</div>, <div>내용1</div>, <div>내용2</div>][
+          props.tabNumber
+        ]
+      }
     </div>
   );
 }

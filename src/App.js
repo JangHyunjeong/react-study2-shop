@@ -2,12 +2,16 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Navbar, Container, Nav } from "react-bootstrap";
 import bg from "./img/bg.png";
-import { useState } from "react";
+import { createContext, useState } from "react";
 import data from "./data/shoes";
 import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
 import Card from "./components/Card";
 import Detail from "./pages/detail";
 import axios from "axios";
+
+// context api 사용하기 - 근데 redux 같은 외부 라이브러리 많이 사용함
+// 1. createContext 만들기
+export let Context1 = createContext();
 
 function App() {
   let [shoes, setShose] = useState(data);
@@ -16,6 +20,7 @@ function App() {
   let [moreCount, setMoreCount] = useState(0);
   let [more, setMore] = useState(true);
   let [loading, setLoading] = useState(false);
+  let [재고] = useState([10, 11, 12]);
 
   return (
     <div className="App">
@@ -118,10 +123,6 @@ function App() {
                   <div className="loading">로딩중입니다</div>
                 ) : null}
               </div>
-              {/* ajax옵션
-      1. XMLHttpRequest
-      2. fetch()
-      3. axios */}
 
               {more === true ? (
                 <button
@@ -184,9 +185,16 @@ function App() {
           }
         />
 
-        {/* URL 파라미터
-        /detail/:id  = /detail/아무거나 라는 뜻 */}
-        <Route path="/detail/:id" element={<Detail shoes={shoes} />} />
+        {/* 2. <Context>로 원하는 컴포넌트 감싸기 */}
+        {/* 3. value={{공유하고싶은변수명}} */}
+        <Route
+          path="/detail/:id"
+          element={
+            <Context1.Provider value={{ 재고, shoes }}>
+              <Detail shoes={shoes} />
+            </Context1.Provider>
+          }
+        />
 
         <Route path="/about" element={<About />}>
           <Route path="member" element={<div>멤버</div>} />
