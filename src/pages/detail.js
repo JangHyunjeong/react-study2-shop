@@ -1,25 +1,18 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Nav } from "react-bootstrap";
 
 function Detail(props) {
   let [count, setCount] = useState(0);
   let [alertShow, setAlertShow] = useState(true);
   let { id } = useParams();
+  let [tabNumber, setTabNumber] = useState(0);
 
   useEffect(() => {
-    // useEffect함수 마지막엔 ,[] 이렇게 생긴 dependency를 추가할 수 있는데,
-    // 1. [state] 여기 안에 있는 state가 변할때만 실행해달라는 조건을 거는거다.
-    // 2. [] 이런식으로 비워드면 mount에만 실행됨
-    // 아래의 식은, []를 붙여줘야 업데이트 될때마다 setTimeOut이 안붙으니까, []붙여야함
     let timer = setTimeout(() => {
       setAlertShow(false);
     }, 2000);
     return () => {
-      // useEffect 동작 전에 실행됨.
-      // 별명 : clean up 함수 :  기존 코드 제거하는 코드
-      // 1. 타이머 함수같은거 제작시, 기존 타이머 제거하는 용도로 많이 씀.
-      // 2. 데이터 요청시, 기존 데이터 요청은 제거하는 용도 (데이터 불러오는 중, 업데이트 발생하면 불러달라 요청 중복되면서 데이터 이상해질수 있으니까)
-      // 참고 ) mount시 실행안됌, unmount시 실행됨
       clearTimeout(timer);
     };
   }, []);
@@ -31,24 +24,6 @@ function Detail(props) {
       alert("숫자만 쓰셈");
     }
   }, [prdCount]);
-
-  // useEffect 사용법 정리
-  // 1. 재랜더링마다 코드 실행하고싶으면 여기에 코드 작성
-  // useEffect(()=>{})
-
-  // 2. mount시 1회 코드 실행
-  // useEffect(()=>{}, [])
-
-  // 3. unmount시 1회 코드 실행
-  // useEffect(()=>{
-  //  return ()=>{ 여기 코드 작성}
-  // }, [])
-
-  // 4. 언제나 코드 실행전에 실행하고픈 코드가 있으면,
-  // return ()=>{ 여기 코드 작성}
-
-  // 5. 특정 state변경시에만 실행
-  // useEffect(()=>{}, [state명])
 
   return (
     <div className="container">
@@ -91,6 +66,65 @@ function Detail(props) {
           </div>
         </div>
       </div>
+
+      <Nav variant="tabs" defaultActiveKey="link0">
+        <Nav.Item>
+          <Nav.Link
+            eventKey="link0"
+            onClick={() => {
+              setTabNumber(0);
+            }}
+          >
+            버튼0
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link
+            eventKey="link1"
+            onClick={() => {
+              setTabNumber(1);
+            }}
+          >
+            버튼1
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link
+            eventKey="link2"
+            onClick={() => {
+              setTabNumber(2);
+            }}
+          >
+            버튼2
+          </Nav.Link>
+        </Nav.Item>
+      </Nav>
+      <TabContent tabNumber={tabNumber} />
+    </div>
+  );
+}
+
+function TabContent(props) {
+  // 탭 tabNumber가 변할때 end 부착
+  let [fade, setFade] = useState("");
+
+  // 리액트 automatic batching
+  // state 변경하는 함수들이 근처에 있으면,
+  // state변경 마지막에 재 랜더링
+  useEffect(() => {
+    let fade = setTimeout(() => {
+      setFade("end");
+    }, 10);
+
+    return () => {
+      clearTimeout(fade);
+      setFade("");
+    };
+  }, [props.tabNumber]);
+
+  return (
+    <div className={`start ${fade}`}>
+      {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][props.tabNumber]}
     </div>
   );
 }
