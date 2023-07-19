@@ -7,11 +7,15 @@ import data from "./data/shoes";
 import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
 import Card from "./components/Card";
 import Detail from "./pages/detail";
+import axios from "axios";
 
 function App() {
   let [shoes, setShose] = useState(data);
   // 페이지 이동을 도와주는 함수
   let naviate = useNavigate();
+  let [moreCount, setMoreCount] = useState(0);
+  let [more, setMore] = useState(true);
+  let [loading, setLoading] = useState(false);
 
   return (
     <div className="App">
@@ -109,7 +113,73 @@ function App() {
                     return <Card key={item.id} item={item}></Card>;
                   })}
                 </div>
+
+                {loading === true ? (
+                  <div className="loading">로딩중입니다</div>
+                ) : null}
               </div>
+              {/* ajax옵션
+      1. XMLHttpRequest
+      2. fetch()
+      3. axios */}
+
+              {more === true ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    // 로딩중
+                    setLoading(true);
+
+                    // 1. get
+                    if (moreCount === 0) {
+                      axios
+                        .get("https://codingapple1.github.io/shop/data2.json")
+                        .then((result) => {
+                          let shoesCopy = [...shoes, ...result.data];
+                          setShose(shoesCopy);
+                          setMoreCount(moreCount + 1);
+                          // 로딩중 숨기기
+                          setLoading(false);
+                        })
+                        .catch((error) => {
+                          console.log(error);
+                          // 로딩중 숨기기
+                          setLoading(false);
+                        });
+                    } else if (moreCount === 1) {
+                      axios
+                        .get("https://codingapple1.github.io/shop/data3.json")
+                        .then((result) => {
+                          let shoesCopy = [...shoes, ...result.data];
+                          setShose(shoesCopy);
+                          setMoreCount(moreCount + 1);
+                          setLoading(false);
+                        })
+                        .catch((error) => {
+                          console.log(error);
+                          setLoading(false);
+                        });
+                      setMore(false);
+                    }
+
+                    // 1. post
+                    // axios.post('url', {data:Data});
+
+                    // 2. ajax 요청 2개 다 성공 시
+                    // Promise.all([axios.get("/url1"), axios.get("/ url2")])
+                    // .then(()=>{})
+                    // 원래 서버와 문자만 주고 받을 수 있다.
+                    // 따옴표 쳐놓으면 array, object도 주고받기 가능 "{"name":"kim"}" - json
+
+                    // 3. fetch 쓰면, 이런식으로 json 데이터 수정해줘야함 (axios는 자동으로 해줌)
+                    // fetch("https://codingapple1.github.io/shop/data2.json")
+                    //   .then((result) => result.json())
+                    //   .then((data) => console.log(data));
+                  }}
+                >
+                  더보기
+                </button>
+              ) : null}
             </div>
           }
         />
