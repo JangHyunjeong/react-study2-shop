@@ -5,14 +5,19 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import store from "./store.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    {/*  router 사용시 BrowserRouter 추가  */}
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    {/* redux 사용시 Provider 추가 */}
+    <Provider store={store}>
+      {/*  router 사용시 BrowserRouter 추가  */}
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>
 );
 
