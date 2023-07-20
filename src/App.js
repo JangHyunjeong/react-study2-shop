@@ -1,17 +1,14 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useState } from "react";
+import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
+import axios from "axios";
+import data from "./data/shoes";
 import { Navbar, Container, Nav } from "react-bootstrap";
 import bg from "./img/bg.png";
-import { createContext, useState } from "react";
-import data from "./data/shoes";
-import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
 import Card from "./components/Card";
 import Detail from "./pages/Detail";
-import axios from "axios";
-
-// context api 사용하기 - 근데 redux 같은 외부 라이브러리 많이 사용함
-// 1. createContext 만들기
-export let Context1 = createContext();
+import Cart from "./pages/Cart";
 
 function App() {
   let [shoes, setShose] = useState(data);
@@ -82,6 +79,13 @@ function App() {
               }}
             >
               이벤트2
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                naviate("/cart");
+              }}
+            >
+              장바구니
             </Nav.Link>
           </Nav>
         </Container>
@@ -185,16 +189,9 @@ function App() {
           }
         />
 
-        {/* 2. <Context>로 원하는 컴포넌트 감싸기 */}
-        {/* 3. value={{공유하고싶은변수명}} */}
-        <Route
-          path="/detail/:id"
-          element={
-            <Context1.Provider value={{ 재고, shoes }}>
-              <Detail shoes={shoes} />
-            </Context1.Provider>
-          }
-        />
+        <Route path="/detail/:id" element={<Detail shoes={shoes} />} />
+
+        <Route path="/cart" element={<Cart />} />
 
         <Route path="/about" element={<About />}>
           <Route path="member" element={<div>멤버</div>} />
