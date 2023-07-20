@@ -17,7 +17,6 @@ function App() {
   let [moreCount, setMoreCount] = useState(0);
   let [more, setMore] = useState(true);
   let [loading, setLoading] = useState(false);
-  let [재고] = useState([10, 11, 12]);
 
   return (
     <div className="App">
