@@ -3,22 +3,28 @@ import user from "./store/userSlice";
 
 let cartData = createSlice({
   name: "cartData",
-  initialState: [
-    { id: 0, name: "White and Black", count: 2 },
-    { id: 2, name: "Grey Yordan", count: 1 },
-  ],
+  initialState: [],
   reducers: {
     plus(state, action) {
-      let target = state.find((item) => {
+      const target = state.find((item) => {
         return item.id === action.payload;
       });
-      let targetIndx = state.indexOf(target);
+      const targetIndx = state.indexOf(target);
       state[targetIndx].count = state[targetIndx].count + 1;
+    },
+    addToCart(state, action) {
+      const newData = {
+        id: action.payload.id,
+        name: action.payload.title,
+        count: 1,
+      };
+      const copy = [...state, newData];
+      return copy;
     },
   },
 });
 
-export let { plus } = cartData.actions;
+export let { plus, addToCart } = cartData.actions;
 
 export default configureStore({
   reducer: {
