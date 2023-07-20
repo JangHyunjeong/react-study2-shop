@@ -2,6 +2,7 @@ import { Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 // 3. 만든 함수 import
 import { changeName, changeAge } from "./../store/userSlice";
+import { plus } from "../store";
 
 // redux 사용하면 컴포넌트들이 props 없이 state 공유 가능
 
@@ -45,7 +46,15 @@ function Cart() {
                 <td>{idx}</td>
                 <td>{item.name}</td>
                 <td>{item.count}</td>
-                <td></td>
+                <td>
+                  <button
+                    onClick={() => {
+                      dispatch(plus(item.id));
+                    }}
+                  >
+                    +
+                  </button>
+                </td>
               </tr>
             );
           })}
