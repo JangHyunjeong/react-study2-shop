@@ -2,7 +2,7 @@ import { Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 // 3. 만든 함수 import
 import { changeName, changeAge } from "./../store/userSlice";
-import { plus } from "../store";
+import { plus, deleteItem } from "../store";
 
 // redux 사용하면 컴포넌트들이 props 없이 state 공유 가능
 
@@ -30,36 +30,50 @@ function Cart() {
       >
         열살 더먹기
       </button>
-      <Table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>상품명</th>
-            <th>수량</th>
-            <th>변경하기</th>
-          </tr>
-        </thead>
-        <tbody>
-          {state.cartData.map(function (item, idx) {
-            return (
-              <tr key={item.id}>
-                <td>{idx}</td>
-                <td>{item.name}</td>
-                <td>{item.count}</td>
-                <td>
-                  <button
-                    onClick={() => {
-                      dispatch(plus(item.id));
-                    }}
-                  >
-                    +
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+      {state.cartData == "" ? (
+        <div>장바구니가 비었습니다.</div>
+      ) : (
+        <Table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>상품명</th>
+              <th>수량</th>
+              <th>변경하기</th>
+              <th>삭제하기</th>
+            </tr>
+          </thead>
+          <tbody>
+            {state.cartData.map(function (item, idx) {
+              return (
+                <tr key={item.id}>
+                  <td>{idx}</td>
+                  <td>{item.name}</td>
+                  <td>{item.count}</td>
+                  <td>
+                    <button
+                      onClick={() => {
+                        dispatch(plus(item.id));
+                      }}
+                    >
+                      +
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      onClick={() => {
+                        dispatch(deleteItem(item.id));
+                      }}
+                    >
+                      삭제
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      )}
     </div>
   );
 }

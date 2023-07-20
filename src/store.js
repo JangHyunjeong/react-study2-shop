@@ -36,10 +36,20 @@ let cartData = createSlice({
       const copy = [...state, newData];
       return copy;
     },
+
+    // 삭제하기
+    deleteItem(state, action) {
+      const idx = state.findIndex((item) => {
+        return item.id === action.payload;
+      });
+      let copy = [...state];
+      copy.splice(idx, 1);
+      return copy;
+    },
   },
 });
 
-export let { plus, addToCart } = cartData.actions;
+export let { plus, addToCart, deleteItem } = cartData.actions;
 
 export default configureStore({
   reducer: {
