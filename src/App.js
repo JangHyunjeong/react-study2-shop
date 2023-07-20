@@ -6,7 +6,7 @@ import { createContext, useState } from "react";
 import data from "./data/shoes";
 import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
 import Card from "./components/Card";
-import Detail from "./pages/detail";
+import Detail from "./pages/Detail";
 import axios from "axios";
 
 // context api 사용하기 - 근데 redux 같은 외부 라이브러리 많이 사용함
