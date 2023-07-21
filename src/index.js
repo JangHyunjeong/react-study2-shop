@@ -10,15 +10,15 @@ import store from "./store.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    {/* redux 사용시 Provider 추가 */}
-    <Provider store={store}>
-      {/*  router 사용시 BrowserRouter 추가  */}
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-  </React.StrictMode>
+  //<React.StrictMode>
+  //redux 사용시 Provider 추가
+  <Provider store={store}>
+    {/* router 사용시 BrowserRouter 추가 */}
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </Provider>
+  //</React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
