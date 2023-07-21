@@ -13,6 +13,17 @@ function Detail(props) {
   let dispatch = useDispatch();
 
   useEffect(() => {
+    let newData = [];
+    if (JSON.parse(localStorage.getItem("watched")) !== null) {
+      newData = JSON.parse(localStorage.getItem("watched"));
+    }
+    newData.unshift(parseFloat(id));
+    newData = new Set(newData);
+    newData = [...newData];
+    localStorage.setItem("watched", JSON.stringify(newData));
+  }, []);
+
+  useEffect(() => {
     setTimeout(() => {
       setFade("end");
     }, 10);

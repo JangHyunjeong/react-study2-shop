@@ -1,14 +1,15 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
 import axios from "axios";
 import data from "./data/shoes";
 import { Navbar, Container, Nav } from "react-bootstrap";
 import bg from "./img/bg.png";
-import Card from "./components/Card";
 import Detail from "./pages/Detail";
 import Cart from "./pages/Cart";
+import Card from "./components/Card";
+import Watched from "./components/Watched";
 
 function App() {
   let [shoes, setShose] = useState(data);
@@ -17,6 +18,12 @@ function App() {
   let [moreCount, setMoreCount] = useState(0);
   let [more, setMore] = useState(true);
   let [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("watched") === null) {
+      localStorage.setItem("watched", JSON.stringify([]));
+    }
+  }, []);
 
   return (
     <div className="App">
@@ -213,6 +220,7 @@ function App() {
         {/* 404페이지 * 은 이 외의 모든것 */}
         <Route path="*" element={<div>404 없는 페이지 입니다.</div>} />
       </Routes>
+      <Watched shoes={shoes}></Watched>
     </div>
   );
 }
