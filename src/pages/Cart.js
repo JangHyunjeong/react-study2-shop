@@ -2,7 +2,7 @@ import { Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 // 3. 만든 함수 import
 import { changeName, changeAge } from "./../store/userSlice";
-import { plus, deleteItem } from "../store";
+import { plus, deleteItem } from "./../store/cartSlice";
 
 // redux 사용하면 컴포넌트들이 props 없이 state 공유 가능
 
@@ -30,7 +30,7 @@ function Cart() {
       >
         열살 더먹기
       </button>
-      {state.cartData == "" ? (
+      {state.cartData.length === 0 ? (
         <div>장바구니가 비었습니다.</div>
       ) : (
         <Table>

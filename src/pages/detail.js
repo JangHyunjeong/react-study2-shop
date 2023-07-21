@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { Nav } from "react-bootstrap";
-import { addToCart } from "../store";
+import { addToCart } from "./../store/cartSlice";
 
 function Detail(props) {
   let [count, setCount] = useState(0);
