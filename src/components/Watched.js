@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 function Watched(props) {
+  let naviate = useNavigate();
   let ids = JSON.parse(localStorage.getItem("watched"));
   let shoes = null;
 
@@ -14,7 +17,13 @@ function Watched(props) {
         {shoes !== null ? (
           shoes.map((item, idx) => {
             return (
-              <li className="watched-card" key={item.id}>
+              <li
+                className="watched-card"
+                key={item.id}
+                onClick={() => {
+                  naviate(`/detail/${item.id}`);
+                }}
+              >
                 <img
                   src={`https://codingapple1.github.io/shop/shoes${
                     item.id + 1
