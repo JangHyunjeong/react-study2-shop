@@ -10,7 +10,7 @@ import bg from "./img/bg.png";
 // import Cart from "./pages/Cart";
 import Card from "./components/Card";
 import Watched from "./components/Watched";
-import { useQuery } from "react-query";
+// import { useQuery } from "react-query";
 
 const Detail = lazy(() => import("./pages/Detail"));
 const Cart = lazy(() => import("./pages/Cart"));
@@ -23,13 +23,13 @@ function App() {
   let [more, setMore] = useState(true);
   let [loading, setLoading] = useState(false);
 
-  let result = useQuery("data", () => {
-    return axios
-      .get("https://codingapple1.github.io/userdata.json")
-      .then((a) => {
-        return a.data;
-      });
-  });
+  // let result = useQuery("data", () => {
+  //   return axios
+  //     .get("https://codingapple1.github.io/userdata.json")
+  //     .then((a) => {
+  //       return a.data;
+  //     });
+  // });
 
   useEffect(() => {
     if (localStorage.getItem("watched") === null) {
@@ -112,8 +112,8 @@ function App() {
       {/* react-query 장점1. 성공, 실패, 로딩중 쉽게 파악 가능 */}
       {/* {result.isLoading ? "로딩중" : result.data.name}
       {result.isLoading && "로딩중"}
-      {result.error && "에러남"} */}
-      {result.data && result.data.name}
+      {result.error && "에러남"} 
+      {result.data && result.data.name}*/}
 
       <Suspense fullback={<div>로딩중</div>}>
         <Routes>

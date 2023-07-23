@@ -1,20 +1,47 @@
 import { Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-// 3. 만든 함수 import
 import { changeName, changeAge } from "./../store/userSlice";
 import { plus, deleteItem } from "./../store/cartSlice";
+import { memo, useMemo, useState } from "react";
 
-// redux 사용하면 컴포넌트들이 props 없이 state 공유 가능
+// 자식 컴포넌트 재랜더링 막기
+// 1. memo
+// 꼭 필요할때만 재렌더링 하려면 memo
+// memo - props 가 변할때만 재랜더 해줌
+let Child = memo(function () {
+  console.log("재랜더링");
+  return <div>자식임</div>;
+});
+
+// 2. useMemo
+function 함수() {
+  return 1;
+}
 
 function Cart() {
+  //let result = 함수; // Cart가 랜더링 될때마다 실행됨
+
+  // 컴포넌트 랜더링시 1회만 실행해줌 (useEffect와 같음)
+  let result = useMemo(() => {
+    return 함수();
+  }, []);
+
   let state = useSelector((state) => {
     return state;
   });
-  // 4. useDispatch : store.js 에 요청을 보내주는 함수
   let dispatch = useDispatch();
+  let [count, setCount] = useState(0);
 
   return (
     <div>
+      <Child></Child>
+      <button
+        onClick={() => {
+          setCount(count + 1);
+        }}
+      >
+        +
+      </button>
       {state.user.name} ({state.user.age})의 장바구니
       <button
         onClick={() => {
