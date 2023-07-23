@@ -1,16 +1,19 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState, useEffect } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
 import axios from "axios";
 import data from "./data/shoes";
 import { Navbar, Container, Nav } from "react-bootstrap";
 import bg from "./img/bg.png";
-import Detail from "./pages/Detail";
-import Cart from "./pages/Cart";
+// import Detail from "./pages/Detail";
+// import Cart from "./pages/Cart";
 import Card from "./components/Card";
 import Watched from "./components/Watched";
 import { useQuery } from "react-query";
+
+const Detail = lazy(() => import("./pages/Detail"));
+const Cart = lazy(() => import("./pages/Cart"));
 
 function App() {
   let [shoes, setShose] = useState(data);
@@ -20,25 +23,12 @@ function App() {
   let [more, setMore] = useState(true);
   let [loading, setLoading] = useState(false);
 
-  // axios.get("https://codingapple1.github.io/userdata.json").then((a) => {
-  //   console.log(a.data);
-  // });
-
-  // 실시간 데이터(sns, 실시간 코인.. )
-  // 1. react-query이용해서 ajax요청하면
-  // react-query장점2. 틈만 나면 자동으로 재요청 (다른탭 갔다가 와도 요청해줌 : refetch)
-  // react-query장점3. 실패시 retry 알아서 해줌
-  // react-query장점4. state 공유 안해도 됨. -> react-query로 ajax요청 다시 해도 한번만 됨
-  // react-query장점5. 결과 캐싱 가능
   let result = useQuery("data", () => {
-    return (
-      axios.get("https://codingapple1.github.io/userdata.json").then((a) => {
-        console.log("요청됨");
+    return axios
+      .get("https://codingapple1.github.io/userdata.json")
+      .then((a) => {
         return a.data;
-      }),
-      // refetch 시간 조정. 데이터 받아오고 2초동안은 안받아오도록 조정
-      { staleTime: 2000 }
-    );
+      });
   });
 
   useEffect(() => {
@@ -125,129 +115,131 @@ function App() {
       {result.error && "에러남"} */}
       {result.data && result.data.name}
 
-      <Routes>
-        {/* Route는 페이지라고 생각하면 됨. 페이지 갯수만큼 추가하기 */}
-        <Route
-          path="/"
-          element={
-            <div>
-              <div
-                className="main-bg"
-                style={{ backgroundImage: "url(" + bg + ")" }}
-              ></div>
+      <Suspense fullback={<div>로딩중</div>}>
+        <Routes>
+          {/* Route는 페이지라고 생각하면 됨. 페이지 갯수만큼 추가하기 */}
+          <Route
+            path="/"
+            element={
+              <div>
+                <div
+                  className="main-bg"
+                  style={{ backgroundImage: "url(" + bg + ")" }}
+                ></div>
 
-              <button
-                type="button"
-                onClick={() => {
-                  shoes.sort((a, b) => {
-                    if (a.title > b.title) return 1;
-                    if (a.title < b.title) return -1;
-                    return 0;
-                  });
-                  setShose([...shoes]);
-                }}
-              >
-                가나다순
-              </button>
-
-              <div className="container">
-                <div className="row">
-                  {shoes.map(function (item, i) {
-                    return <Card key={item.id} item={item}></Card>;
-                  })}
-                </div>
-
-                {loading === true ? (
-                  <div className="loading">로딩중입니다</div>
-                ) : null}
-              </div>
-
-              {more === true ? (
                 <button
                   type="button"
                   onClick={() => {
-                    // 로딩중
-                    setLoading(true);
-
-                    // 1. get
-                    if (moreCount === 0) {
-                      axios
-                        .get("https://codingapple1.github.io/shop/data2.json")
-                        .then((result) => {
-                          let shoesCopy = [...shoes, ...result.data];
-                          setShose(shoesCopy);
-                          setMoreCount(moreCount + 1);
-                          // 로딩중 숨기기
-                          setLoading(false);
-                        })
-                        .catch((error) => {
-                          console.log(error);
-                          // 로딩중 숨기기
-                          setLoading(false);
-                        });
-                    } else if (moreCount === 1) {
-                      axios
-                        .get("https://codingapple1.github.io/shop/data3.json")
-                        .then((result) => {
-                          let shoesCopy = [...shoes, ...result.data];
-                          setShose(shoesCopy);
-                          setMoreCount(moreCount + 1);
-                          setLoading(false);
-                        })
-                        .catch((error) => {
-                          console.log(error);
-                          setLoading(false);
-                        });
-                      setMore(false);
-                    }
-
-                    // 1. post
-                    // axios.post('url', {data:Data});
-
-                    // 2. ajax 요청 2개 다 성공 시
-                    // Promise.all([axios.get("/url1"), axios.get("/ url2")])
-                    // .then(()=>{})
-                    // 원래 서버와 문자만 주고 받을 수 있다.
-                    // 따옴표 쳐놓으면 array, object도 주고받기 가능 "{"name":"kim"}" - json
-
-                    // 3. fetch 쓰면, 이런식으로 json 데이터 수정해줘야함 (axios는 자동으로 해줌)
-                    // fetch("https://codingapple1.github.io/shop/data2.json")
-                    //   .then((result) => result.json())
-                    //   .then((data) => console.log(data));
+                    shoes.sort((a, b) => {
+                      if (a.title > b.title) return 1;
+                      if (a.title < b.title) return -1;
+                      return 0;
+                    });
+                    setShose([...shoes]);
                   }}
                 >
-                  더보기
+                  가나다순
                 </button>
-              ) : null}
-            </div>
-          }
-        />
 
-        <Route path="/detail/:id" element={<Detail shoes={shoes} />} />
+                <div className="container">
+                  <div className="row">
+                    {shoes.map(function (item, i) {
+                      return <Card key={item.id} item={item}></Card>;
+                    })}
+                  </div>
 
-        <Route path="/cart" element={<Cart />} />
+                  {loading === true ? (
+                    <div className="loading">로딩중입니다</div>
+                  ) : null}
+                </div>
 
-        <Route path="/about" element={<About />}>
-          <Route path="member" element={<div>멤버</div>} />
-          <Route path="location" element={<div>로케이션</div>} />
-        </Route>
+                {more === true ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      // 로딩중
+                      setLoading(true);
 
-        <Route
-          path="event"
-          element={
-            <div>
-              <h2>오늘의 이벤트</h2>
-              <Outlet></Outlet>
-            </div>
-          }
-        >
-          <Route path="one" element={<p>첫 주문시 양배추즙 서비스</p>} />
-          <Route path="two" element={<p>생일기념 쿠폰받기</p>} />
-        </Route>
+                      // 1. get
+                      if (moreCount === 0) {
+                        axios
+                          .get("https://codingapple1.github.io/shop/data2.json")
+                          .then((result) => {
+                            let shoesCopy = [...shoes, ...result.data];
+                            setShose(shoesCopy);
+                            setMoreCount(moreCount + 1);
+                            // 로딩중 숨기기
+                            setLoading(false);
+                          })
+                          .catch((error) => {
+                            console.log(error);
+                            // 로딩중 숨기기
+                            setLoading(false);
+                          });
+                      } else if (moreCount === 1) {
+                        axios
+                          .get("https://codingapple1.github.io/shop/data3.json")
+                          .then((result) => {
+                            let shoesCopy = [...shoes, ...result.data];
+                            setShose(shoesCopy);
+                            setMoreCount(moreCount + 1);
+                            setLoading(false);
+                          })
+                          .catch((error) => {
+                            console.log(error);
+                            setLoading(false);
+                          });
+                        setMore(false);
+                      }
 
-        {/* 404페이지 * 은 이 외의 모든것 */}
-        <Route path="*" element={<div>404 없는 페이지 입니다.</div>} />
-      </Routes>
+                      // 1. post
+                      // axios.post('url', {data:Data});
+
+                      // 2. ajax 요청 2개 다 성공 시
+                      // Promise.all([axios.get("/url1"), axios.get("/ url2")])
+                      // .then(()=>{})
+                      // 원래 서버와 문자만 주고 받을 수 있다.
+                      // 따옴표 쳐놓으면 array, object도 주고받기 가능 "{"name":"kim"}" - json
+
+                      // 3. fetch 쓰면, 이런식으로 json 데이터 수정해줘야함 (axios는 자동으로 해줌)
+                      // fetch("https://codingapple1.github.io/shop/data2.json")
+                      //   .then((result) => result.json())
+                      //   .then((data) => console.log(data));
+                    }}
+                  >
+                    더보기
+                  </button>
+                ) : null}
+              </div>
+            }
+          />
+
+          <Route path="/detail/:id" element={<Detail shoes={shoes} />} />
+
+          <Route path="/cart" element={<Cart />} />
+
+          <Route path="/about" element={<About />}>
+            <Route path="member" element={<div>멤버</div>} />
+            <Route path="location" element={<div>로케이션</div>} />
+          </Route>
+
+          <Route
+            path="event"
+            element={
+              <div>
+                <h2>오늘의 이벤트</h2>
+                <Outlet></Outlet>
+              </div>
+            }
+          >
+            <Route path="one" element={<p>첫 주문시 양배추즙 서비스</p>} />
+            <Route path="two" element={<p>생일기념 쿠폰받기</p>} />
+          </Route>
+
+          {/* 404페이지 * 은 이 외의 모든것 */}
+          <Route path="*" element={<div>404 없는 페이지 입니다.</div>} />
+        </Routes>
+      </Suspense>
       <Watched shoes={shoes}></Watched>
     </div>
   );
