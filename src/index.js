@@ -7,17 +7,23 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store.js";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   //<React.StrictMode>
-  //redux 사용시 Provider 추가
-  <Provider store={store}>
-    {/* router 사용시 BrowserRouter 추가 */}
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </Provider>
+  // react-qeury 사용시 추가
+  <QueryClientProvider client={queryClient}>
+    {/* redux 사용시 Provider 추가 */}
+    <Provider store={store}>
+      {/* router 사용시 BrowserRouter 추가 */}
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
+  </QueryClientProvider>
   //</React.StrictMode>
 );
 

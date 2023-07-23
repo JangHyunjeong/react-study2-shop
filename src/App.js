@@ -10,6 +10,7 @@ import Detail from "./pages/Detail";
 import Cart from "./pages/Cart";
 import Card from "./components/Card";
 import Watched from "./components/Watched";
+import { useQuery } from "react-query";
 
 function App() {
   let [shoes, setShose] = useState(data);
@@ -18,6 +19,27 @@ function App() {
   let [moreCount, setMoreCount] = useState(0);
   let [more, setMore] = useState(true);
   let [loading, setLoading] = useState(false);
+
+  // axios.get("https://codingapple1.github.io/userdata.json").then((a) => {
+  //   console.log(a.data);
+  // });
+
+  // 실시간 데이터(sns, 실시간 코인.. )
+  // 1. react-query이용해서 ajax요청하면
+  // react-query장점2. 틈만 나면 자동으로 재요청 (다른탭 갔다가 와도 요청해줌 : refetch)
+  // react-query장점3. 실패시 retry 알아서 해줌
+  // react-query장점4. state 공유 안해도 됨. -> react-query로 ajax요청 다시 해도 한번만 됨
+  // react-query장점5. 결과 캐싱 가능
+  let result = useQuery("data", () => {
+    return (
+      axios.get("https://codingapple1.github.io/userdata.json").then((a) => {
+        console.log("요청됨");
+        return a.data;
+      }),
+      // refetch 시간 조정. 데이터 받아오고 2초동안은 안받아오도록 조정
+      { staleTime: 2000 }
+    );
+  });
 
   useEffect(() => {
     if (localStorage.getItem("watched") === null) {
@@ -96,6 +118,12 @@ function App() {
           </Nav>
         </Container>
       </Navbar>
+
+      {/* react-query 장점1. 성공, 실패, 로딩중 쉽게 파악 가능 */}
+      {/* {result.isLoading ? "로딩중" : result.data.name}
+      {result.isLoading && "로딩중"}
+      {result.error && "에러남"} */}
+      {result.data && result.data.name}
 
       <Routes>
         {/* Route는 페이지라고 생각하면 됨. 페이지 갯수만큼 추가하기 */}
